@@ -10,21 +10,23 @@
   - [General requirements](#general-requirements)
   - [Debug - Wireframe mode](#debug---wireframe-mode)
   - [Debug - Normals mode](#debug---normals-mode)
+  - [Debug - UVs mode](#debug---uvs-mode)
   - [Boat](#boat)
-    - [Mesh \& Normals](#mesh--normals)
+    - [Mesh](#mesh)
+    - [Normals](#normals)
     - [UVs \& Textures](#uvs--textures)
     - [Spinning Fan](#spinning-fan)
     - [Movement](#movement)
   - [Height Map](#height-map)
-    - [Mesh](#mesh)
-    - [Normals](#normals)
+    - [Mesh](#mesh-1)
+    - [Normals](#normals-1)
     - [UVs \& Textures](#uvs--textures-1)
     - [Texture blending](#texture-blending)
   - [Skybox](#skybox)
     - [Mesh \& Textures](#mesh--textures)
     - [Rotation](#rotation)
   - [Water](#water)
-    - [Mesh \& Normals](#mesh--normals-1)
+    - [Mesh \& Normals](#mesh--normals)
     - [Transparency](#transparency)
     - [Ripples](#ripples)
     - [Skybox Reflections\*](#skybox-reflections)
@@ -83,27 +85,30 @@ Features are described in detail below. Example screenshots & video will be prov
 
 | Feature | Marks |
 |---------|-------|
-| Debug - Wireframe mode | % |
-| Debug - Normals mode | % |
-| Boat - Mesh & Normals | % |
-| Boat - UVs & Textures | % |
-| Boat - Spinning Fan | % |
-| Boat - Movement | % |
-| Height Map - Mesh | % |
-| Height Map - Normals | % |
-| Height Map - UVs & Textures | % |
-| Height Map - Texture blending | % |
-| Skybox - Textures | % | 
-| Skybox - Rotation | % | 
-| Water - Mesh & Normals | % |
-| Water - Transparency | % |
-| Water - Ripples | % |
-| Water - Skybox Reflections* | % |
-| Water - Fresnel effect* | % |
-| Lighting - Sun | % |
-| Lighting - Headlamp | % |
-| Cameras - Map | % |
-| Cameras - Third-person | % |
+| General requirements | 4% |
+| Debug - Wireframe mode | 4% |
+| Debug - Normals mode | 4% |
+| Debug - UV mode | 4% |
+| Boat - Mesh | 2% |
+| Boat - Normals | 2% |
+| Boat - UVs & Textures | 4% |
+| Boat - Spinning Fan | 5% |
+| Boat - Movement | 5% |
+| Height Map - Mesh | 5% |
+| Height Map - Normals | 5% |
+| Height Map - UVs & Textures | 4% |
+| Height Map - Texture blending | 4% |
+| Skybox - Mesh & Textures | 4% | 
+| Skybox - Rotation | 4% | 
+| Water - Mesh & Normals | 4% |
+| Water - Transparency | 4% |
+| Water - Ripples | 4% |
+| Water - Skybox Reflections* | 4% |
+| Water - Fresnel effect* | 4% |
+| Lighting - Sun | 6% |
+| Lighting - Headlamp | 6% |
+| Cameras - Map | 4% |
+| Cameras - Third-person | 4% |
 
 ## General requirements
 
@@ -119,26 +124,38 @@ World space should be oriented so that the the j axis (i.e. the y coordinate) po
 * Pressing ‘B’ should toggle between filled and wireframe views of all the meshes in the scene. 
 
 ## Debug - Normals mode
-* Pressing ‘N’ should toggle on and off a mode in which all objects are shaded to display their normals in world coordinates (using a normal matrix), where the RGB colour values are equal to the normal coordinates (r,g,b) = (n_x,n_y,n_z).
+* Pressing ‘N’ should turn on a debug mode in which all objects are shaded to display their normals in world coordinates (using a normal matrix), where the RGB colour values are equal to the normal coordinates (r,g,b) = (n_x,n_y,n_z).
+* Pressing 'V' should return to the usual non-debug mode.
+
+## Debug - UVs mode
+* Pressing ‘M’ should turn on a debug mode in which all objects are shaded to display their UVs, where the RGB colour values are equal to the UV coordinates (r,g,b) = (u,v,0). Values outside the (0,1) range should be wrapped using the [mod](https://docs.gl/sl4/mod) operator.
+* Pressing 'V' should return to the usual non-debug mode.
 
 ## Boat 
 
-The boat model is provided as a Wavefront OBJ file `boat.obj`. The mesh includes vertex positions, normals and UVs. An example `Boat.java` class has been provided to illustrate how to access this mesh data using one of these sub-meshes using the `Model.java` class provided.
+The boat model is provided as a Wavefront OBJ file `models/boat.obj`. This includes three submeshes:
+* `boat` contains the hull and frame of the boat
+* `fan` contains the fan blades at the back of the boat
+* `lantern` cotains a lamp mounted near the front of the boat.
 
-### Mesh & Normals
+Each submesh includes vertex positions, normals and UVs. An example `Boat.java` class has been provided to illustrate how to access this mesh data of one of these sub-meshes using the `Model.java` class provided.
 
-* The boat should initially be drawn at the centre of the map, so that it sits on the water, partly immersed.
+### Mesh
+* Extend the `Boat.java` class to draw all three submeshes.
+* The boat should initially be drawn at the centre of the map, so that it sits on the water, with part of the hull underneath the surface.
+
+### Normals
+* Load the normals from each submesh of the boat and correctly pass them to the shader.
 
 ### UVs & Textures
 
-* •	Texture coordinates (UVs) for the boat are specified in the mesh. You should use these coordinates to texture each part using the `boat.png` texture provided.
+* Texture coordinates (UVs) for the boat are specified in the mesh. You should use these coordinates to texture each part using the `textures/boat.png` texture provided.
 
 ### Spinning Fan
 
-A fan model is provided as a Wavefront OBJ file `fan.obj`. 
+* The `fan` submesh should be animated to spin appropriately around its forward axis.
 
-* Using the scene graph, attach the fan to the boat at position FIXME (in the boat's model space).
-* The fan should be animated to spin appropriately around its axis.
+**Note**: As a submesh, the fan's vertices are defined in the same model coordinate frame as the rest of the boat. The centre of the fan is at (0, 1.252717393f, -1.135f) in model coordinates.
 
 ### Movement
 
@@ -148,7 +165,7 @@ The boat should be controlled using the WASD keys:
 
 ## Height Map
 
-The islands should be generated using the height map image `islands.png`, shown below. Each pixel in the image represents the terrain height at a particular point in x/z coordiantes. Height values vary from 0 to 1. A template `HeighMap.java` class has been provided to read the data from this image file.
+The islands should be generated using the height map image `maps/islands.png`. Each pixel in the image represents the terrain height at a particular point in x/z coordiantes. Height values vary from 0 to 1. A template `HeighMap.java` class has been provided to read the data from this image file.
 
 ### Mesh
 
@@ -270,7 +287,8 @@ There are two different main camera modes: Map and Third person, which can be ac
 * The arrow keys should control the yaw and pitch of the camera
     - Pressing left and right should rotate the camera clockwise and anticlockwise around the boat, respectively.
     - Pressing up and down should pitch the camera up and down, to a maximum of plus or minus 90 degrees (i.e straight up or straight down).
-* Pressing the 'Page up' and 'Page down' keys should zoom the camera in and out (i.e. change the field of view of the camera) between sensible minimum and maximum values. 
+* Pressing the 'Page up' and 'Page down' keys should dolly the camera forwards and back (i.e. change the distance of the camera from the boat) between sensible minimum and maximum values. 
+* Pressing the ',' (comma) and '.' (period) keys should zoom the camera in and out (i.e. change the field of view of the camera) between sensible minimum and maximum values. 
 * Resizing the window should change the aspect of the camera view volume to match.
 * Near and far planes should be set so the entire boat is visible, as well as some of the surrounding landscape.
 * **Document**: Illustrate how you calculate the position and view volume of the third-person camera.
@@ -279,6 +297,7 @@ There are two different main camera modes: Map and Third person, which can be ac
 
 You should complete the `Report.nd` template included in the project. The report should include:
 * A completed table indicating the features you have attempted
+* An illustration of the scene graph used.
 * Responses to each of the documentation requirements for the features described above.
   
 Documentation is marked separately from implementation, but should reflect the approach taken in your code. You can attempte documentation questions for features you have not implemented or completed, but should indicate that this is the case.
