@@ -5,7 +5,6 @@
   - [Contents](#contents)
 - [Learning Outcomes](#learning-outcomes)
 - [Deliverables](#deliverables)
-- [Group work](#group-work)
 - [Features](#features)
   - [General requirements](#general-requirements)
   - [Debug - Wireframe mode](#debug---wireframe-mode)
@@ -22,21 +21,15 @@
     - [Normals](#normals-1)
     - [UVs \& Textures](#uvs--textures-1)
     - [Texture blending](#texture-blending)
-  - [Skybox](#skybox)
-    - [Mesh \& Textures](#mesh--textures)
-    - [Rotation](#rotation)
   - [Water](#water)
     - [Mesh \& Normals](#mesh--normals)
     - [Transparency](#transparency)
     - [Ripples](#ripples)
-    - [Skybox Reflections\*](#skybox-reflections)
-    - [Fresnel effect\*\*](#fresnel-effect)
+    - [Fresnel effect](#fresnel-effect)
   - [Lighting](#lighting)
-    - [Day - Sun](#day---sun)
-    - [Headlamp](#headlamp)
-  - [Cameras](#cameras)
-    - [Map view](#map-view)
-    - [Third-person view](#third-person-view)
+    - [Day](#day)
+    - [Night](#night)
+  - [Camera](#camera)
 - [Documentation](#documentation)
 - [Submission](#submission)
 - [Marks](#marks)
@@ -65,56 +58,46 @@ This assignment covers the following topics:
 You are required to submit:
 * An Eclipse project based on the framework provided in this repository, implementing the features listed below.
 * A report, based on the Report.md template provided in this repository, describing the implementation of these features.
-* Individual peer assessment, via link provided on iLearn.
-
-# Group work
-
-This is two-person assignment. You should make sure to select a partner using the group selection link on iLearn as soon as possible. Individual submissions will not be accepted.
-
-Both partners are expected to contribute equally to the implementation and documentation deliverables. Peer assessment and evidence of contributions in GitHub will be used to assign individual grades (see [Marking](#marking) below).
 
 # Features
 
-Your project will implement a 3D showing a hovercraft around a set of islands. 
+Your project will implement a 3D scene showing a hovercraft around a set of islands. 
 
 Your mark will be based on the features you implement, from the table below. Each feature has a mark value attached. The more challenging elements are marked with an asterisk*. 
 
-Some features include a documentation requirement, which should be included in your [report](#report) (below). Documentation requirements are marked separately.
+Some features include a documentation requirement, which should be included in your [report](#documentation) (below). Documentation requirements are marked separately.
 
 Features are described in detail below. Example screenshots & video will be provided on iLearn.
 
 | Feature | Marks |
 |---------|-------|
-| General requirements | 4% |
-| Debug - Wireframe mode | 4% |
-| Debug - Normals mode | 4% |
-| Debug - UV mode | 4% |
-| Boat - Mesh | 2% |
-| Boat - Normals | 2% |
+| General requirements | 3% |
+| Debug - Wireframe mode | 3% |
+| Debug - Normals mode | 3% |
+| Debug - UV mode | 3% |
+| Boat - Mesh | 3% |
+| Boat - Normals | 3% |
 | Boat - UVs & Textures | 4% |
-| Boat - Spinning Fan | 5% |
-| Boat - Movement | 5% |
-| Height Map - Mesh | 5% |
-| Height Map - Normals | 5% |
+| Boat - Spinning Fan | 4% |
+| Boat - Movement | 4% |
+| Height Map - Mesh | 4% |
+| Height Map - Normals | 4% |
 | Height Map - UVs & Textures | 4% |
 | Height Map - Texture blending | 4% |
-| Skybox - Mesh & Textures | 4% | 
-| Skybox - Rotation | 4% | 
-| Water - Mesh & Normals | 4% |
+| Water - Mesh & Normals | 2% |
 | Water - Transparency | 4% |
 | Water - Ripples | 4% |
-| Water - Skybox Reflections* | 4% |
-| Water - Fresnel effect* | 4% |
-| Lighting - Sun | 6% |
-| Lighting - Headlamp | 6% |
-| Cameras - Map | 4% |
+| Water - Fresnel effect | 4% |
+| Lighting - Sun | 8% |
+| Lighting - Headlamp | 8% |
 | Cameras - Third-person | 4% |
+| **Total** | 80% |
 
 ## General requirements
 
 Your scene should be implemented using:
 * Anti-aliasing using 4x multisampling.
-* Backface culling
+* Backface culling and Depth Testing should be implemented
 * Mipmaps for all textures (with trilinear filtering)
 * Gamma correction (with a default gamma of 2.2)
 
@@ -189,31 +172,12 @@ The islands should be generated using the height map image `maps/islands.png`. E
 * Parts of the terrain below the water level should be textured using the `terrain-sand.png` texture.
 * At the water level, there should be a smooth transition from sand to grass.
 
-## Skybox 
-
-The project should implement day and night modes. Texture files for day and night skyboxes have been provided as `skybox-day` and `skybox-night`.
-
-* Pressing the 'M' key should switch between day and night modes.
-* If skyboxes are not implemented, the background colour should switch between blue and black to indicate each mode.
-
-### Mesh & Textures
-
-* A skybox mesh should be implemented.
-* The appropriate skybox should be used in each mode.
-* Skyboxes should follow the camera and be rendered behind all other scene objects.
-* **Document**: Explain how the skybox position is calculated to correctly follow the camera.
-* **Document**: Explain how the texture coordinates and depth are calculated for a particular fragment on the skybox.
-
-### Rotation
-
-* Pressing the ',' and '.' keys should rotate the skybox to the west / east.
-
 ## Water
 
 ### Mesh & Normals
 
 * A flat water mesh should be created as a single quad that covers the entire 100m x 100m terrain, at a height of 20m.
-* The mesh should include appropriate vectors normals.
+* The mesh should include appropriate normal vectors.
 * The mesh should be coloured a suitable shade of cyan (blue-green).
 
 ### Transparency
@@ -222,28 +186,23 @@ The project should implement day and night modes. Texture files for day and nigh
 
 ### Ripples
 
-* Fragment normals for the water should be calculate in the shader to implement a ripple effect that affect lighting and reflection features (below). 
+* Fragment normals for the water should be calculated in the shader to implement a ripple effect that affect lighting (below). 
 * This should be implemented without adjusting vertex positions or normals.
 * Ripples should be animated to move at constant speed across the surface of the water.
 * **Document**: Explain how this normal is calculated for one fragment. Provide an appropriate diagram as well as the relevant equations used in the calculation.
 
-### Skybox Reflections*
+### Fresnel effect
 
-* The water surface should implement cube map reflections, to reflect the skybox (but not the boat or terrain).
-* If ripples are implemented, the ripples should affect reflections appropriately.
-* **Document**: Explain how the reflected colour value is calculated.
-
-### Fresnel effect**
-
-In real-world physics, surfaces are more reflective when viewed at oblique angles and more transparent when viewed straight on. This effect is described by the [Fresnel equations](https://en.wikipedia.org/wiki/Fresnel_equations), but they are rather complicated. We can simulate a simpler effect using the equation:
-$$t = \max(0,1 - (v.n))$$
+In real-world physics, surfaces are more reflective when viewed at oblique angles and more transparent when viewed straight on. This effect is described by the [Fresnel equations](https://en.wikipedia.org/wiki/Fresnel_equations), but they are rather complicated. We can simulate a similar effect using the equation:
+$$t = \max(0,1 - (\hat{v}.\hat{n}))$$
 $v$ is the view direction and $n$ is the fragment normal. 
 
-* Use this equation to linearly interpolate between suitable minimum and maximum alpha values on the water mesh, so it is transparent if you look straight down, but reflective if you look along the surface.
+* Use this equation to linearly interpolate between suitable minimum and maximum alpha values on the water mesh, so it is transparent if you look straight down, but opaque if you look along the surface.
 
 ## Lighting
 
-There are two lighting modes depending on whether day or night mode is active (see [Skybox](#skybox) above).
+The project should implement day and night modes:
+* Pressing the 'M' key should switch between day and night modes.
 
 Each light mode should implement:
 * Ambient lighting on all meshes.
@@ -252,39 +211,29 @@ Each light mode should implement:
 
 Ambient light levels in each mode should be high during the day and low at night.
 
-### Day - Sun
+### Day
 
-* In day mode, lighting should use a directional light source based on the position of the sun.
-* The source vector for the sun should rotate to match the rotation of the day skybox. If the skybox isn't implemented, then the vector should simply rotate east-to-west using the ',' and '.' keys.
-* **Document**: Illustrate how the day-time lighting value for a point on the height map is calculated, for the third-person camera.
+In day mode:
+* The sky should be blue.
+* Ambient light should be high.
+* Lighting should use a directional light source based on the position of the sun.
+* The source vector for the sun should rotate east-to-west using the ',' and '.' keys.
+* **Document**: Explain how the day-time lighting value for a point on the height map is calculated, using the third-person camera. Provide an appropriate diagram as well as the relevant equations used in the calculation.
 
-### Headlamp
+### Night
 
-* In night mode, lighting should use a point light source based centred at the front of the boat at position FIXME in model coordinates.
+In night mode,
+* The sky should be black.
+* Ambient light should be low (but not zero).
+* Lighting should use a point light source based centred at the front of the boat at position FIXME in model coordinates.
 * This light should only affect objects in front of the light source. 
-* **Document**: Illustrate how the night-time lighting value for a point on the height map is calculated, for the third-person camera.
+* **Document**: Explain how the night-time lighting value for a point on the height map is calculated, using the third-person camera. Provide an appropriate diagram as well as the relevant equations used in the calculation.
 
-## Cameras
+## Camera
 
-There are two different main camera modes: Map and Third person, which can be activated using the `1` and `2` keys respectively. 
-
-**Note**: Make sure you correctly implement the view vector in your lighting based on whether the camera is orthographic or perspective.
-
-### Map view
-
-* The map camera is a top-down orthographic view of the map.
-* Resizing the window should make the map larger or smaller.
-* *The map should be centred in the window.
-* Pressing the 'Page up' and 'Page down' keys should zoom the camera in and out between sensible minimum and maximum values. 
-* If the aspect of the window does not match the aspect of the map, then the scissor rectangle should be set so that black bars should be drawn on the left and right or top and bottom depending on whether the window is too wide or too tall.
-* Near and far planes should be set so the entire map is visible 
-* **Document**: Illustrate the viewport and scissor rectangle for this camera for windows with aspect ratios 2:1 and 1:2. Label the corners of each rectangle with coordinates in NDC, World and Viewport coordinates
-
-### Third-person view
-
-* The third-person camera is a perspective camera that follows the boat from an external point of view.
+* The camera is a perspective camera that follows the boat from an external point of view.
 * The camera should always face towards the boat’s position in world space and maintain a constant distance from the boat’s origin.
-* The arrow keys should control the yaw and pitch of the camera
+* The arrow keys should control the yaw and pitch of the camera:
     - Pressing left and right should rotate the camera clockwise and anticlockwise around the boat, respectively.
     - Pressing up and down should pitch the camera up and down, to a maximum of plus or minus 90 degrees (i.e straight up or straight down).
 * Pressing the 'Page up' and 'Page down' keys should dolly the camera forwards and back (i.e. change the distance of the camera from the boat) between sensible minimum and maximum values. 
@@ -295,28 +244,35 @@ There are two different main camera modes: Map and Third person, which can be ac
 
 # Documentation
 
-You should complete the `Report.nd` template included in the project. The report should include:
+You should complete the `Report.md` template included in the project. The report should include:
 * A completed table indicating the features you have attempted
 * An illustration of the scene graph used.
 * Responses to each of the documentation requirements for the features described above.
   
-Documentation is marked separately from implementation, but should reflect the approach taken in your code. You can attempte documentation questions for features you have not implemented or completed, but should indicate that this is the case.
+Documentation is marked separately from implementation, but should reflect the approach taken in your code. You can attempt documentation questions for features you have not implemented or completed, but should indicate that this is the case.
 
-Documentation should include both diagrams and relevant equations to explain your solution. 
+Documentation should include both diagrams and relevant equations to explain your solution. **Note**: Merely copying images from the lecture notes or other sources will get zero marks (and may be treated academic misconduct).
 
-**Note**: Merely copying images from the lecture notes or other sources will get zero marks (and may be treated academic misconduct).
+Document marks will be assigned per-question as:
+
+| Feature | Marks |
+|---------|-------|
+| Scene graph | 2% |
+| Height Map - Mesh | 3% |
+| Height Map - Normals | 3% |
+| Water - Ripples | 3% |
+| Lighting - Sun | 3% |
+| Lighting - Headlamp | 3% |
+| Cameras - Third-person | 3% |
+| **Total** | 20% |
 
 # Submission
 
 Both the Eclipse project and report will be submitted using this GitHub repository. Make sure to commit and push your work before the submission deadline. Any commits made after this deadline will be treated as late and standard late penalties will be applied (see the COMP3170 Unit Guide for details). Only work in the `main` branch of your repository will be marked. 
 
-Individual peer assessment should be submitted via the quiz on iLearn. Both team members need to complete this quiz. You each need to provide a grade (following the rubric given in the template) and a justification for the grade. This grade will be kept private from your teammate but will be used as evidence to determine the individual grades.
-
 # Marks
 
-Each of the above components will be individually marked on the rubric below. The total sum of these marks will give you your mark out of 100 for the task (80 for code, 20 for documentation). Marks will not be awarded for elements not meaningfully implemented.
-
-Individual marks will be assigned based on peer assessment and evidence of contributions from the GitHub commit history. Both team members will be given the same mark unless there is evidence of a significant discrepancy between contributions.
+Each of the above components will be marked on the rubric below. The total sum of these marks will give you your mark out of 100 for the task (80 for code, 20 for documentation). Marks will not be awarded for elements not meaningfully implemented.
 
 ## Rubrics
 
