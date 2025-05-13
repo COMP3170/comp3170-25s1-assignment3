@@ -194,8 +194,10 @@ The islands should be generated using the height map image `maps/islands.png`. E
 ### Fresnel effect
 
 In real-world physics, surfaces are more reflective when viewed at oblique angles and more transparent when viewed straight on. This effect is described by the [Fresnel equations](https://en.wikipedia.org/wiki/Fresnel_equations), but they are rather complicated. We can simulate a similar effect using the equation:
+
 $$t = \max(0,1 - \hat{v}.\hat{n})$$
-$v$ is the view direction and $n$ is the fragment normal. 
+
+where $v$ is the view direction and $n$ is the fragment normal. 
 
 * Use this equation to linearly interpolate between suitable minimum and maximum alpha values on the water mesh, so it is transparent if you look straight down, but opaque if you look along the surface.
 
