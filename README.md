@@ -221,7 +221,6 @@ In day mode:
 * Sunlight should be colour white.
 * Pressing the '[' and ']' keys should rotate the direction of the sun from east to west.
 * Lighting should use a directional light source based on the position of the sun.
-* The source vector for the sun should rotate east-to-west using the ',' and '.' keys.
 * **Document**: Explain how the day-time lighting value for a point on the height map is calculated, using the third-person camera. Provide an appropriate diagram as well as the relevant equations used in the calculation.
 
 ### Night
