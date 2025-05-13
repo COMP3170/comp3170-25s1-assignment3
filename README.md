@@ -121,7 +121,7 @@ The boat model is provided as a Wavefront OBJ file `models/boat.obj`. This inclu
 * `fan` contains the fan blades at the back of the boat
 * `lantern` cotains a lamp mounted near the front of the boat.
 
-Each submesh includes vertex positions, normals and UVs. An example `Boat.java` class has been provided to illustrate how to access this mesh data of one of these sub-meshes using the `Model.java` class provided.
+Each submesh includes vertex positions, normals and UVs. An example `Boat.java` class has been provided to illustrate how to access this mesh data of one of these sub-meshes using the `MeshData.java` class provided.
 
 ### Mesh
 * Extend the `Boat.java` class to draw all three submeshes.
