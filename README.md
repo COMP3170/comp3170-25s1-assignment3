@@ -194,7 +194,7 @@ The islands should be generated using the height map image `maps/islands.png`. E
 ### Fresnel effect
 
 In real-world physics, surfaces are more reflective when viewed at oblique angles and more transparent when viewed straight on. This effect is described by the [Fresnel equations](https://en.wikipedia.org/wiki/Fresnel_equations), but they are rather complicated. We can simulate a similar effect using the equation:
-$$t = \max(0,1 - (\hat{v}.\hat{n}))$$
+$$t = \max(0,1 - \hat{v}.\hat{n})$$
 $v$ is the view direction and $n$ is the fragment normal. 
 
 * Use this equation to linearly interpolate between suitable minimum and maximum alpha values on the water mesh, so it is transparent if you look straight down, but opaque if you look along the surface.
@@ -216,6 +216,8 @@ Ambient light levels in each mode should be high during the day and low at night
 In day mode:
 * The sky should be blue.
 * Ambient light should be high.
+* Sunlight should be colour white.
+* Pressing the '[' and ']' keys should rotate the direction of the sun from east to west.
 * Lighting should use a directional light source based on the position of the sun.
 * The source vector for the sun should rotate east-to-west using the ',' and '.' keys.
 * **Document**: Explain how the day-time lighting value for a point on the height map is calculated, using the third-person camera. Provide an appropriate diagram as well as the relevant equations used in the calculation.
@@ -225,8 +227,10 @@ In day mode:
 In night mode,
 * The sky should be black.
 * Ambient light should be low (but not zero).
-* Lighting should use a point light source based centred at the front of the boat at position FIXME in model coordinates.
-* This light should only affect objects in front of the light source. 
+* Lighting should use a point light source based centred at the lamp mounted on the boat at position (-0.78, 1.39, 0.58) in model coordinates.
+* Lamplight should be coloured yellow.
+* The light should only affect objects in front of the light source, in the direction it is facing. 
+* Pressing the '[' and ']' keys should rotate the lamp left and right.
 * **Document**: Explain how the night-time lighting value for a point on the height map is calculated, using the third-person camera. Provide an appropriate diagram as well as the relevant equations used in the calculation.
 
 ## Camera
